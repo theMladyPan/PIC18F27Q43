@@ -53,8 +53,8 @@
 /**
   Section: Macro Declarations
 */
-#define UART1_TX_BUFFER_SIZE 8
-#define UART1_RX_BUFFER_SIZE 8
+#define UART1_TX_BUFFER_SIZE 64
+#define UART1_RX_BUFFER_SIZE 64
 
 /**
   Section: Global Variables
@@ -180,14 +180,12 @@ uint8_t UART1_Read(void)
 {
     uint8_t readValue  = 0;
     
-    while(0 == uart1RxCount)
-    {
-    }
+    while(0 == uart1RxCount);
 
     uart1RxLastError = uart1RxStatusBuffer[uart1RxTail];
 
     readValue = uart1RxBuffer[uart1RxTail++];
-   	if(sizeof(uart1RxBuffer) <= uart1RxTail)
+    if(sizeof(uart1RxBuffer) <= uart1RxTail)
     {
         uart1RxTail = 0;
     }

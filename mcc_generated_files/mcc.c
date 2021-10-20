@@ -57,6 +57,9 @@ void SYSTEM_Initialize(void)
     NCO1_Initialize();
     TMR1_Initialize();
     UART1_Initialize();
+    
+    IO_DIR_NEG_SetLow();
+    IO_DIR_NEG_SetHigh();
 }
 
 void OSCILLATOR_Initialize(void)

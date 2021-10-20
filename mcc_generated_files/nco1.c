@@ -83,7 +83,16 @@ bool NCO1_GetOutputStatus(void)
     // Return output status on accumulator over flow
     return (NCO1CONbits.OUT);
 }
-/**
- End of File
-*/
 
+
+void NCO1_Stop(void){
+    NCO1CONbits.EN = 0;
+}
+
+void NCO1_Start(void){
+    NCO1CONbits.EN = 1;
+}
+
+bool NCO1_Enabled(void){
+    return NCO1CONbits.EN;
+}

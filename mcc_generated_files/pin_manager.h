@@ -121,6 +121,46 @@
 #define RC1_SetAnalogMode()         do { ANSELCbits.ANSELC1 = 1; } while(0)
 #define RC1_SetDigitalMode()        do { ANSELCbits.ANSELC1 = 0; } while(0)
 
+// get/set IO_DIR aliases
+#define IO_DIR_TRIS                 TRISCbits.TRISC2
+#define IO_DIR_LAT                  LATCbits.LATC2
+#define IO_DIR_PORT                 PORTCbits.RC2
+#define IO_DIR_WPU                  WPUCbits.WPUC2
+#define IO_DIR_OD                   ODCONCbits.ODCC2
+#define IO_DIR_ANS                  ANSELCbits.ANSELC2
+#define IO_DIR_SetHigh()            do { LATCbits.LATC2 = 1; } while(0)
+#define IO_DIR_SetLow()             do { LATCbits.LATC2 = 0; } while(0)
+#define IO_DIR_Toggle()             do { LATCbits.LATC2 = ~LATCbits.LATC2; } while(0)
+#define IO_DIR_GetValue()           PORTCbits.RC2
+#define IO_DIR_SetDigitalInput()    do { TRISCbits.TRISC2 = 1; } while(0)
+#define IO_DIR_SetDigitalOutput()   do { TRISCbits.TRISC2 = 0; } while(0)
+#define IO_DIR_SetPullup()          do { WPUCbits.WPUC2 = 1; } while(0)
+#define IO_DIR_ResetPullup()        do { WPUCbits.WPUC2 = 0; } while(0)
+#define IO_DIR_SetPushPull()        do { ODCONCbits.ODCC2 = 0; } while(0)
+#define IO_DIR_SetOpenDrain()       do { ODCONCbits.ODCC2 = 1; } while(0)
+#define IO_DIR_SetAnalogMode()      do { ANSELCbits.ANSELC2 = 1; } while(0)
+#define IO_DIR_SetDigitalMode()     do { ANSELCbits.ANSELC2 = 0; } while(0)
+
+// get/set IO_DIR_NEG aliases
+#define IO_DIR_NEG_TRIS                 TRISCbits.TRISC3
+#define IO_DIR_NEG_LAT                  LATCbits.LATC3
+#define IO_DIR_NEG_PORT                 PORTCbits.RC3
+#define IO_DIR_NEG_WPU                  WPUCbits.WPUC3
+#define IO_DIR_NEG_OD                   ODCONCbits.ODCC3
+#define IO_DIR_NEG_ANS                  ANSELCbits.ANSELC3
+#define IO_DIR_NEG_SetHigh()            do { LATCbits.LATC3 = 1; } while(0)
+#define IO_DIR_NEG_SetLow()             do { LATCbits.LATC3 = 0; } while(0)
+#define IO_DIR_NEG_Toggle()             do { LATCbits.LATC3 = ~LATCbits.LATC3; } while(0)
+#define IO_DIR_NEG_GetValue()           PORTCbits.RC3
+#define IO_DIR_NEG_SetDigitalInput()    do { TRISCbits.TRISC3 = 1; } while(0)
+#define IO_DIR_NEG_SetDigitalOutput()   do { TRISCbits.TRISC3 = 0; } while(0)
+#define IO_DIR_NEG_SetPullup()          do { WPUCbits.WPUC3 = 1; } while(0)
+#define IO_DIR_NEG_ResetPullup()        do { WPUCbits.WPUC3 = 0; } while(0)
+#define IO_DIR_NEG_SetPushPull()        do { ODCONCbits.ODCC3 = 0; } while(0)
+#define IO_DIR_NEG_SetOpenDrain()       do { ODCONCbits.ODCC3 = 1; } while(0)
+#define IO_DIR_NEG_SetAnalogMode()      do { ANSELCbits.ANSELC3 = 1; } while(0)
+#define IO_DIR_NEG_SetDigitalMode()     do { ANSELCbits.ANSELC3 = 0; } while(0)
+
 // get/set RC6 procedures
 #define RC6_SetHigh()            do { LATCbits.LATC6 = 1; } while(0)
 #define RC6_SetLow()             do { LATCbits.LATC6 = 0; } while(0)

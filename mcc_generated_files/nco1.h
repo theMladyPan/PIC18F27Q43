@@ -127,6 +127,12 @@ void NCO1_Initialize(void);
  */
 bool NCO1_GetOutputStatus(void);
 
+void NCO1_Stop(void);
+
+void NCO1_Start(void);
+
+bool NCO1_Enabled(void);
+
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     }
