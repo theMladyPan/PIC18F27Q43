@@ -27,7 +27,7 @@ void dir_fwd(void){
 
 void dir_rev(void){
     IO_DIR_SetHigh();
-    IO_DIR_SetLow();
+    IO_DIR_NEG_SetLow();
     putch('r');
 }
 
@@ -82,21 +82,19 @@ void main(void)
         putch(0x06);
         
         //handle received data (big-endian)
-        for(uint8_t c = 0; c <ib; c){
+        for(uint8_t c = 0; c < ib; c){
             if(rx_buffer[c] == 'l'){
-                c++;
                 NCO1_Stop();
                 pulseAmount = 0;
                 for(uint8_t i = 0; i < 4; i++){
-                    uint32_t shift = ((3-i)*8);
-                    uint32_t buf = (uint16_t)rx_buffer[c++];
+                    uint8_t shift = ((3-i)*8);
+                    uint8_t buf = (uint8_t)rx_buffer[++c];
                     uint32_t increment =  buf << shift;
                     pulseAmount += increment;
                 }
                 printf("%d", pulseAmount);
-                
-            }else if(rx_buffer[c] == 's'){
-                c++;
+            }
+            if(rx_buffer[c] == 's'){
                 while(pulseAmount > UINT16_MAX){
                     TMR1_WriteTimer(0);
                     TMR1_StartTimer();
@@ -111,17 +109,17 @@ void main(void)
                     NCO1_Start();
                 }
                 while(NCO1_Enabled());
-            }else if(rx_buffer[c] == 't'){
-                c++;
-                dir_toggle();
-            }else if(rx_buffer[c] == 'r'){
-                c++;
-                dir_rev();
-            }else if(rx_buffer[c] == 'f'){
-                dir_fwd();
-            }else{
-                c++;
             }
+            if(rx_buffer[c] == 't'){
+                dir_toggle();
+            }
+            if(rx_buffer[c] == 'r'){
+                dir_rev();
+            }
+            if(rx_buffer[c] == 'f'){
+                dir_fwd();
+            }
+            c++;
         }
         putch(0x03);
     }
