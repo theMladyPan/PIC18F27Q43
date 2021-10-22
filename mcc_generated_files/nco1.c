@@ -71,9 +71,11 @@ void NCO1_Initialize (void)
     // 
     NCO1INCU = 0x00;
     // 
-    NCO1INCH = 0x03;
+    //NCO1INCH = 0x00; //1khz
+    NCO1INCH = 0x09; //72khz
     // 
-    NCO1INCL = 0xD7;
+    //NCO1INCL = 0x21; //1kHz
+    NCO1INCL = 0x37; //72kHz
 
    
 }

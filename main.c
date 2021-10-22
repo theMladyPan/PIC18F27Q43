@@ -89,10 +89,12 @@ void main(void)
                 for(uint8_t i = 0; i < 4; i++){
                     uint8_t shift = ((3-i)*8);
                     uint8_t buf = (uint8_t)rx_buffer[++c];
-                    uint32_t increment =  buf << shift;
+                    uint32_t increment =  (uint32_t)buf << shift;
                     pulseAmount += increment;
                 }
-                printf("%d", pulseAmount);
+                printf("%X", pulseAmount>>16);
+                printf("%X", pulseAmount);
+                
             }
             if(rx_buffer[c] == 's'){
                 while(pulseAmount > UINT16_MAX){
@@ -124,47 +126,3 @@ void main(void)
         putch(0x03);
     }
 }
-/*
-    while (1)
-    {
-        if(UART1_is_rx_ready()){
-            tmp = UART1_Read();
-            switch(tmp)
-            {
-                case 'p':{
-                    pulseAmount = (uint16_t)UART1_Read() << 8;
-                    pulseAmount += UART1_Read();
-                    write_string(putch, itoa(pulseAmount));
-                    break;
-                }
-                case 'l':
-                {
-                    TMR1_StopTimer();
-                    NCO1CONbits.EN = 0;
-                    uint16_t tmrLoadVal = UINT16_MAX - pulseAmount + 1;
-                    TMR1_WriteTimer(tmrLoadVal);
-                    break;
-                }
-                case 's':
-                {
-                    // TMR1_Reload();
-                    TMR1_StartTimer();
-                    NCO1CONbits.EN = 1;
-                    break;
-                }
-                case 'r':
-                {
-                    NCO1CONbits.EN = 0;
-                    TMR1_StopTimer();
-                    UART1_Write(TMR1H);
-                    UART1_Write(TMR1L);
-                    break;
-                }
-                default:
-                {
-                    UART1_Write(tmp);
-                    break;
-                }
-            }
-        }        
-    }*/
