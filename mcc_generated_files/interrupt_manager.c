@@ -66,9 +66,9 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         UART1_RxInterruptHandler();
     }
-    else if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+    else if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
     {
-        ADCC_ISR();
+        TMR0_ISR();
     }
     else if(PIE3bits.TMR1IE == 1 && PIR3bits.TMR1IF == 1)
     {

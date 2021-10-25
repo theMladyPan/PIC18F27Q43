@@ -53,9 +53,9 @@ void SYSTEM_Initialize(void)
     PMD_Initialize();
     PIN_MANAGER_Initialize();
     OSCILLATOR_Initialize();
-    ADCC_Initialize();
     NCO1_Initialize();
     TMR1_Initialize();
+    TMR0_Initialize();
     UART1_Initialize();
     
     IO_DIR_NEG_SetLow();

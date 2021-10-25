@@ -57,6 +57,8 @@
 volatile uint16_t timer1ReloadVal;
 void (*TMR1_InterruptHandler)(void);
 
+extern volatile Motor_states motor_state;
+
 /**
   Section: TMR1 APIs
 */
@@ -182,8 +184,12 @@ void TMR1_SetInterruptHandler(void (* InterruptHandler)(void)){
 void TMR1_DefaultInterruptHandler(void){
     // add your TMR1 interrupt custom code
     // or set custom function using TMR1_SetInterruptHandler()
-
-    NCO1CONbits.EN = 0;
+    
+    // stop output
+    NCO1_Stop();
+    // sanity check
+    TMR1_StopTimer();
+    TMR0_StopTimer();
 }
 
 /**

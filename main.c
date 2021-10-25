@@ -1,40 +1,34 @@
 #include "mcc_generated_files/mcc.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "motorlib.h"
+
+//user defined
+#define NCO_DESIRED_RAMP_MS 500 //ms
+#define NCO_MIN_FREQ 1000 //Hz
+#define NCO_MAX_FREQ 21362 //Hz
+#define TMR0_INT_PERIOD_MS 10 //ms
+#define NCO_CLOCK_SOURCE_FREQ ( _XTAL_FREQ )
 
 
-void clr_string(char* str, uint8_t strlen){
-    for(uint8_t i = 0; i < strlen; i++){
-        str[i] = '\0';
-    }
-}
+volatile uint24_t nco_ramp_increment;
+static uint16_t ramp_increase_count = ( NCO_DESIRED_RAMP_MS / TMR0_INT_PERIOD_MS );
+volatile uint24_t nco_increment_fmin = (( NCO_MIN_FREQ * 0x100000 ) / NCO_CLOCK_SOURCE_FREQ ) * 2;
+volatile uint24_t nco_increment_fmax = (( (uint64_t)NCO_MAX_FREQ * 0x100000 ) / NCO_CLOCK_SOURCE_FREQ ) * 2;
+static uint24_t nco_increment_delta;
+volatile uint16_t ramp_up_pulses = UINT32_MAX;
+volatile Motor_states motor_state = HALT;
 
-void dir_toggle(){
-    IO_DIR_Toggle();
-    IO_DIR_NEG_Toggle();
-    if(IO_DIR_GetValue()){
-        putch('r');
-    }else{
-        putch('f');
-    }
-}
-
-void dir_fwd(void){
-    IO_DIR_SetLow();
-    IO_DIR_NEG_SetHigh();
-    putch('f');
-}
-
-void dir_rev(void){
-    IO_DIR_SetHigh();
-    IO_DIR_NEG_SetLow();
-    putch('r');
-}
 
 void main(void)
 {
     // Initialize the device
     SYSTEM_Initialize();
+    
+    
+// precomputed
+    nco_increment_delta = ( nco_increment_fmax - nco_increment_fmin );
+    nco_ramp_increment = ( nco_increment_delta / ramp_increase_count );
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts
@@ -45,8 +39,9 @@ void main(void)
     
 
     // Disable the Global Interrupts
-    //INTERRUPT_GlobalInterruptDisable();
-
+    // INTERRUPT_GlobalInterruptDisable();
+    // Khoko papa
+    
     printf("Rdy!");
     
     char *text;
@@ -93,31 +88,21 @@ void main(void)
                     pulseAmount += increment;
                 }
                 printf("%X", pulseAmount>>16);
-                printf("%X", pulseAmount);
+                printf("%X", (uint16_t)pulseAmount);
                 
             }
             if(rx_buffer[c] == 's'){
-                while(pulseAmount > UINT16_MAX){
-                    TMR1_WriteTimer(0);
-                    TMR1_StartTimer();
-                    NCO1_Start();
-                    pulseAmount -= 0x10000;
-                    while(NCO1_Enabled());
-                }
-                if(pulseAmount < UINT16_MAX){
-                    uint16_t tmrLoadVal = UINT16_MAX - pulseAmount + 1;
-                    TMR1_WriteTimer(tmrLoadVal);
-                    TMR1_StartTimer();
-                    NCO1_Start();
-                }
-                while(NCO1_Enabled());
+                motor_move(pulseAmount);
             }
+            
             if(rx_buffer[c] == 't'){
                 dir_toggle();
             }
+            
             if(rx_buffer[c] == 'r'){
                 dir_rev();
             }
+            
             if(rx_buffer[c] == 'f'){
                 dir_fwd();
             }

@@ -51,6 +51,8 @@
 #include <xc.h>
 #include "nco1.h"
 
+extern volatile Motor_states motor_state;
+
 /**
   Section: NCO Module APIs
 */
@@ -71,13 +73,56 @@ void NCO1_Initialize (void)
     // 
     NCO1INCU = 0x00;
     // 
-    //NCO1INCH = 0x00; //1khz
-    NCO1INCH = 0x09; //72khz
+    NCO1INCH = 0x00; //1khz
+    //NCO1INCH = 0x09; //72khz
     // 
-    //NCO1INCL = 0x21; //1kHz
-    NCO1INCL = 0x37; //72kHz
+    NCO1INCL = 0x21; //1kHz
+    //NCO1INCL = 0x37; //72kHz
 
    
+}
+
+void NCO1_Write(uint24_t NcoVal)
+{
+    // Write to the Timer0 register
+    NCO1INCU = (uint8_t) (NcoVal >> 16);
+    NCO1INCH = (uint8_t) (NcoVal >> 8);
+    NCO1INCL = (uint8_t) NcoVal;
+}
+
+bool NCO1_Increase(uint24_t NcoIncVal, uint24_t max)
+{
+    uint16_t ncoVal;
+    ncoVal = NCO1_Read();
+    if(ncoVal < max){
+        NCO1_Write(ncoVal + NcoIncVal);
+        return true;
+    }else{
+        return false;
+    }      
+}
+bool NCO1_Decrease(uint24_t NcoIncVal, uint24_t min)
+{
+    uint16_t ncoVal;
+    ncoVal = NCO1_Read();
+    if(ncoVal > min){
+        NCO1_Write(ncoVal - NcoIncVal);
+        return true;
+    }else{
+        return false;
+    }      
+}
+
+uint16_t NCO1_Read(){
+    uint16_t readVal;
+    uint8_t readValLow;
+    uint8_t readValHigh;
+
+    readValLow  = NCO1INCL;
+    readValHigh = NCO1INCH;
+    readVal  = ((uint16_t)readValHigh << 8) + readValLow;
+
+    return readVal;
 }
 
 bool NCO1_GetOutputStatus(void)
@@ -86,9 +131,9 @@ bool NCO1_GetOutputStatus(void)
     return (NCO1CONbits.OUT);
 }
 
-
 void NCO1_Stop(void){
     NCO1CONbits.EN = 0;
+    motor_state = HALT;
 }
 
 void NCO1_Start(void){
