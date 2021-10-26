@@ -15,7 +15,7 @@ volatile uint16_t timer0ReloadVal16bit;
 extern volatile uint16_t ramp_up_pulses;
 extern volatile uint24_t nco_increment_fmax;
 extern volatile uint24_t nco_increment_fmin;
-extern volatile uint24_t nco_ramp_increment;
+extern volatile float nco_ramp_increment;
 extern volatile Motor_states motor_state;
 
 /**
@@ -28,14 +28,14 @@ void TMR0_Initialize(void)
 {
     // Set TMR0 to the options selected in the User Interface
 
-    // T0CS FOSC/4; T0CKPS 1:4; T0ASYNC synchronised; 
-    T0CON1 = 0x42;
+    // T0CS FOSC/4; T0CKPS 1:1; T0ASYNC synchronised; 
+    T0CON1 = 0x40;
 
-    // TMR0H 99; 
-    TMR0H = 0x63;
+    // TMR0H 193; 
+    TMR0H = 0xC1;
 
-    // TMR0L 192; 
-    TMR0L = 0xC0;
+    // TMR0L 128; 
+    TMR0L = 0x80;
 
     // Load TMR0 value to the 16-bit reload variable
     timer0ReloadVal16bit = (TMR0H << 8) | TMR0L;
@@ -130,10 +130,11 @@ void TMR0_DefaultInterruptHandler(void){
         if(NCO1_Increase(nco_ramp_increment, nco_increment_fmax)){
             IO_RB0_SetHigh();
         }else{
-            TMR0_StopTimer();
             // mark the amount of pulses
             ramp_up_pulses = TMR1_ReadTimer();
+            TMR0_StopTimer();
             motor_state = CONST;
+            putch(0xFF);
         }
     }else if(motor_state == DEC){
         // decrease until stop

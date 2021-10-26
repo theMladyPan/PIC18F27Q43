@@ -62,8 +62,8 @@ void NCO1_Initialize (void)
     // Set the NCO to the options selected in the GUI
     // EN disabled; POL active_hi; PFM FDC_mode; 
     NCO1CON = 0x00;
-    // CKS FOSC; PWS 1_clk; 
-    NCO1CLK = 0x00;
+    // CKS MFINTOSC_500KHz; PWS 1_clk; 
+    NCO1CLK = 0x03;
     // 
     NCO1ACCU = 0x00;
     // 
@@ -90,37 +90,49 @@ void NCO1_Write(uint24_t NcoVal)
     NCO1INCL = (uint8_t) NcoVal;
 }
 
-bool NCO1_Increase(uint24_t NcoIncVal, uint24_t max)
+bool NCO1_Increase(uint24_t ncoIncVal, uint24_t maxInc)
 {
-    uint16_t ncoVal;
+    uint24_t ncoVal;
     ncoVal = NCO1_Read();
-    if(ncoVal < max){
-        NCO1_Write(ncoVal + NcoIncVal);
-        return true;
+    if(ncoVal < maxInc){
+        if((ncoVal + ncoIncVal) < maxInc){
+            NCO1_Write(ncoVal + ncoIncVal);
+            return true;
+        }else{
+            NCO1_Write(maxInc);
+            return false;
+        }
     }else{
         return false;
     }      
 }
-bool NCO1_Decrease(uint24_t NcoIncVal, uint24_t min)
+bool NCO1_Decrease(uint24_t ncoIncVal, uint24_t minInc)
 {
-    uint16_t ncoVal;
+    uint24_t ncoVal;
     ncoVal = NCO1_Read();
-    if(ncoVal > min){
-        NCO1_Write(ncoVal - NcoIncVal);
+    if(ncoVal > minInc){
+        if((ncoVal - ncoIncVal) > minInc){
+            NCO1_Write(ncoVal - ncoIncVal);
         return true;
+        }else{
+            NCO1_Write(minInc);
+            return true;
+        }
     }else{
         return false;
     }      
 }
 
-uint16_t NCO1_Read(){
-    uint16_t readVal;
+uint24_t NCO1_Read(){
+    uint24_t readVal;
     uint8_t readValLow;
     uint8_t readValHigh;
+    uint8_t readValTop;
 
     readValLow  = NCO1INCL;
     readValHigh = NCO1INCH;
-    readVal  = ((uint16_t)readValHigh << 8) + readValLow;
+    readValTop  = NCO1INCU;
+    readVal  = ((uint24_t)readValTop << 16) + ((uint16_t)readValHigh << 8) + (uint8_t)readValLow;
 
     return readVal;
 }

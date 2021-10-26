@@ -54,7 +54,8 @@
 #include <xc.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "../motorlib.h"
+#include "../libmotor.h"
+#include "math.h"
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -128,7 +129,7 @@ void NCO1_Initialize(void);
  */
 bool NCO1_GetOutputStatus(void);
 
-uint16_t NCO1_Read();
+uint24_t NCO1_Read();
 
 bool NCO1_Increase(uint24_t NcoIncVal, uint24_t max);
 

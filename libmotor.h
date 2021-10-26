@@ -1,6 +1,6 @@
 
-#ifndef MOTORLIB_H
-#define	MOTORLIB_H
+#ifndef LIBMOTOR_H
+#define	LIBMOTOR_H
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include "mcc_generated_files/mcc.h"
@@ -20,7 +20,7 @@ void dir_fwd(void);
 
 void dir_rev(void);
 
-void motor_move(uint32_t pulses);
+void motor_move(uint16_t pulses);
 
 #ifdef	__cplusplus
 extern "C" {
@@ -33,5 +33,5 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif	/* XC_HEADER_TEMPLATE_H */
+#endif	/* LIBMOTOR_H */
 

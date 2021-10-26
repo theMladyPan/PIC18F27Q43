@@ -53,7 +53,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "../motorlib.h"
+#include "../libmotor.h"
 #include "tmr0.h"
 #include "nco1.h"
 
