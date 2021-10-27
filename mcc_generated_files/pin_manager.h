@@ -85,6 +85,30 @@
 #define IO_RB0_SetAnalogMode()      do { ANSELBbits.ANSELB0 = 1; } while(0)
 #define IO_RB0_SetDigitalMode()     do { ANSELBbits.ANSELB0 = 0; } while(0)
 
+// get/set RB1 procedures
+#define RB1_SetHigh()            do { LATBbits.LATB1 = 1; } while(0)
+#define RB1_SetLow()             do { LATBbits.LATB1 = 0; } while(0)
+#define RB1_Toggle()             do { LATBbits.LATB1 = ~LATBbits.LATB1; } while(0)
+#define RB1_GetValue()              PORTBbits.RB1
+#define RB1_SetDigitalInput()    do { TRISBbits.TRISB1 = 1; } while(0)
+#define RB1_SetDigitalOutput()   do { TRISBbits.TRISB1 = 0; } while(0)
+#define RB1_SetPullup()             do { WPUBbits.WPUB1 = 1; } while(0)
+#define RB1_ResetPullup()           do { WPUBbits.WPUB1 = 0; } while(0)
+#define RB1_SetAnalogMode()         do { ANSELBbits.ANSELB1 = 1; } while(0)
+#define RB1_SetDigitalMode()        do { ANSELBbits.ANSELB1 = 0; } while(0)
+
+// get/set RB2 procedures
+#define RB2_SetHigh()            do { LATBbits.LATB2 = 1; } while(0)
+#define RB2_SetLow()             do { LATBbits.LATB2 = 0; } while(0)
+#define RB2_Toggle()             do { LATBbits.LATB2 = ~LATBbits.LATB2; } while(0)
+#define RB2_GetValue()              PORTBbits.RB2
+#define RB2_SetDigitalInput()    do { TRISBbits.TRISB2 = 1; } while(0)
+#define RB2_SetDigitalOutput()   do { TRISBbits.TRISB2 = 0; } while(0)
+#define RB2_SetPullup()             do { WPUBbits.WPUB2 = 1; } while(0)
+#define RB2_ResetPullup()           do { WPUBbits.WPUB2 = 0; } while(0)
+#define RB2_SetAnalogMode()         do { ANSELBbits.ANSELB2 = 1; } while(0)
+#define RB2_SetDigitalMode()        do { ANSELBbits.ANSELB2 = 0; } while(0)
+
 // get/set RC0 procedures
 #define RC0_SetHigh()            do { LATCbits.LATC0 = 1; } while(0)
 #define RC0_SetLow()             do { LATCbits.LATC0 = 0; } while(0)

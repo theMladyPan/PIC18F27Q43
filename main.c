@@ -77,6 +77,29 @@ void main(void)
         //send ACK
         putch(0x02);
         
+        dir_fwd();
+        motor_move(300);
+        motor_move(300);
+        motor_move(300);
+        __delay_ms(1000);
+        uint16_t ramp_duration = 17000;
+        
+        ramp_increase_count = (ramp_duration / TMR0_INT_PERIOD_MS);
+        nco_ramp_increment = ( nco_increment_delta / ramp_increase_count ); 
+        if(nco_ramp_increment<=0)nco_ramp_increment = 1;
+                
+        for(int i=0; i<8; i++){
+            ramp_duration -= 2000;  
+            ramp_increase_count = (ramp_duration / TMR0_INT_PERIOD_MS);
+            nco_ramp_increment = ( nco_increment_delta / ramp_increase_count ); 
+            if(nco_ramp_increment<=0)nco_ramp_increment = 1;     
+            motor_move(64380);
+            dir_toggle();     
+        }
+        dir_rev();
+        motor_move(900);
+        
+        
         //handle received data (big-endian)
         for(uint8_t c = 0; c < ib; c++){            
             if(rx_buffer[c] == 'l'){
